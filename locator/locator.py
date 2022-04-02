@@ -44,15 +44,48 @@ def locator(coords: tuple) -> int:
     return d
 
 def getUserMove():
-    pass
+    while True:
+        s = input("Введите номер строки и номер столбца через пробел: ").split()
+        if len(s) != 2:
+            print('Требуется два значения')
+            continue
+        if not s[0].isdigit() or not s[1].isdigit():
+            print('Введенные значения должны быть целыми числами')
+            continue
+        i, j = int(s[0]), int(s[1])
+        if not (0 <= i < BOARD_HEIGHT and 0 <= j < BOARD_WIDTH):
+            print('Координаты должны быть в пределах поля')
+            continue
+        if not board[i][j] in ALPHA:
+            print('Такой ход уже был сделан')
+            continue
+        return [i, j]
 
-BOARD_WIDTH = 40
-BOARD_HEIGHT = 15
+BOARD_WIDTH = 20
+BOARD_HEIGHT = 10
 MAX_CHESTS = 3
 MAX_ATTEMPTS = 30
 ALPHA = '~-'
 
 board = getNewBoard()
-printBoard(board)
 chests = makeChests()
 print(chests)
+print(f'Привет. Здесь спрятаны сундуки с сокровищами ({MAX_CHESTS} шт). У вас есть {MAX_ATTEMPTS} попыток, чтобы их отыскать. Используйте локатор!')
+for attempt in range(MAX_ATTEMPTS):
+    printBoard(board)
+    print(f'Осталось попыток: {MAX_ATTEMPTS - attempt}.')
+    print(f'Осталось сундуков: {len(chests)}')
+    i, j = getUserMove()
+    d = locator((i, j))
+    if d == 0:
+        print('Вы нашли сундук!')
+        board[i][j] = '@'
+        chests.remove((i, j))
+        if len(chests == 0):
+            pass
+    elif d > 9:
+        print('Ничего не найдено')
+        board[i][j] = 'X'
+    else:
+        print('Результат:', d)
+        board[i][j] = str(d)
