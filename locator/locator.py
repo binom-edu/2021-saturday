@@ -76,6 +76,7 @@ for attempt in range(MAX_ATTEMPTS):
     print(f'Осталось попыток: {MAX_ATTEMPTS - attempt}.')
     print(f'Осталось сундуков: {len(chests)}')
     i, j = getUserMove()
+    
     d = locator((i, j))
     if d == 0:
         print('Вы нашли сундук!')
