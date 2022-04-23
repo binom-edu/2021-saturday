@@ -12,12 +12,37 @@ def getNewBoard() -> list:
 def printBoard(board):
     print('  a b c d e f g h')
     for i in range(8):
-        print(8 - i, ' '.join(board[i]))
+        print(8 - i, ' '.join(board[i]), 8 - i)
+    print('  a b c d e f g h')
 
 def selectUserTile() -> list:
-    pass
-# написать функцию для выбора игроком своих фишек
+    userTile, computerTile = TILES
+    print('Вы играете за ', userTile, '. Поменять (y/n)?', sep='')
+    if input().lower().startswith('y'):
+        userTile, computerTile = computerTile, userTile
+    return [userTile, computerTile]
 
+def tilesToFlip(board: list, y: int, x: int, tile: str) -> list:
+    ans = []
+    otherTile = ... # определить вражескую фишку
+    directions = [
+        [-1, 0],
+        [-1, 1],
+        [0, 1],
+        [1, 1],
+        [1, 0],
+        [1, -1],
+        [0, -1]
+        [-1, -1]
+    ]
+    for di, dj in directions:
+        i, j = y, x
+        while True:
+            i += di
+            j += dj
+            # выход за край доски
+            if i < 0:
+                break
 
 TILES = ['●', '○']
 EMPTY = '·'
