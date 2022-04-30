@@ -24,7 +24,8 @@ def selectUserTile() -> list:
 
 def tilesToFlip(board: list, y: int, x: int, tile: str) -> list:
     ans = []
-    otherTile = ... # определить вражескую фишку
+    p = TILES.index(tile)
+    otherTile = TILES[(p + 1) % 2] # вражеская фишка
     directions = [
         [-1, 0],
         [-1, 1],
@@ -32,7 +33,7 @@ def tilesToFlip(board: list, y: int, x: int, tile: str) -> list:
         [1, 1],
         [1, 0],
         [1, -1],
-        [0, -1]
+        [0, -1],
         [-1, -1]
     ]
     for di, dj in directions:
@@ -41,8 +42,28 @@ def tilesToFlip(board: list, y: int, x: int, tile: str) -> list:
             i += di
             j += dj
             # выход за край доски
-            if i < 0:
+            if i < 0 or i > 7 or j < 0 or j > 7:
                 break
+            # пустая клетка
+            if board[i][j] == EMPTY:
+                break
+            # вражеская фишка
+            if board[i][j] == otherTile:
+                continue
+            # своя фишка
+            if board[i][j] == tile:
+                i -= di
+                j -= dj
+                while not (i == y and j == x):
+                    ans.append([i, j])
+                    i -= di
+                    j -= dj
+                break
+    return ans
+
+def getUserMove(board: list):
+    # получить ход игрока
+    pass
 
 TILES = ['●', '○']
 EMPTY = '·'
@@ -50,3 +71,4 @@ EMPTY = '·'
 board = getNewBoard()
 printBoard(board)
 userTile, computerTile = selectUserTile()
+print(tilesToFlip(board, 4, 2, TILES[0]))
