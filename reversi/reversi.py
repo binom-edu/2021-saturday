@@ -61,9 +61,32 @@ def tilesToFlip(board: list, y: int, x: int, tile: str) -> list:
                 break
     return ans
 
+def makeMove(board: list, y: int, x: int, tile: str):
+    for i, j in tilesToFlip(board, y, x, userTile):
+        board[i][j] = tile
+    board[y][x] = tile
+
 def getUserMove(board: list):
-    # получить ход игрока
-    pass
+    while True:
+        s = input('Ваш ход: ')
+        if len(s) != 2:
+            print('Некорректный ввод')
+            continue
+        alf = 'abcdefgh'
+        digits = '12345678'
+        if not s[0].lower() in alf or not s[1] in digits:
+            print('Некорректный ввод')
+            continue
+        i = 8 - int(s[1])
+        j = alf.find(s[0].lower())
+        if board[i][j] != EMPTY:
+            print('Эта клетка уже занята')
+            continue
+        if len(tilesToFlip(board, i, j, userTile)) == 0:
+            print('Нет окруженных фишек')
+            continue
+        makeMove(board, i, j, userTile)
+        return
 
 TILES = ['●', '○']
 EMPTY = '·'
@@ -71,4 +94,5 @@ EMPTY = '·'
 board = getNewBoard()
 printBoard(board)
 userTile, computerTile = selectUserTile()
-print(tilesToFlip(board, 4, 2, TILES[0]))
+getUserMove(board)
+printBoard(board)
