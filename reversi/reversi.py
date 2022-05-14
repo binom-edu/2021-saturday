@@ -1,3 +1,5 @@
+import random
+
 def getNewBoard() -> list:
     board = []
     for i in range(8):
@@ -65,6 +67,22 @@ def makeMove(board: list, y: int, x: int, tile: str):
     for i, j in tilesToFlip(board, y, x, userTile):
         board[i][j] = tile
     board[y][x] = tile
+
+def getValidMoves(board: list, tile: str) -> list:
+    result = []
+    for i in range(8):
+        for j in range(8):
+            if board[i][j] == EMPTY and len(tilesToFlip(board, i, j, userTile)) > 0:
+                result.append([i, j])
+    return result
+
+def getComputerMove(board: list):
+    i, j = random.choice(getValidMoves(board, computerTile))
+    makeMove(board, i, j, computerTile)
+
+def getScore(board: list):
+    # подсчитать очки
+    pass
 
 def getUserMove(board: list):
     while True:
