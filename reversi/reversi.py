@@ -12,6 +12,8 @@ def getNewBoard() -> list:
     return board
 
 def printBoard(board):
+    score = getScore(board)
+    print(f"Пользователь: {userTile}{score['user']}, Компьютер: {computerTile}{score['computer']}")
     print('  a b c d e f g h')
     for i in range(8):
         print(8 - i, ' '.join(board[i]), 8 - i)
@@ -64,7 +66,7 @@ def tilesToFlip(board: list, y: int, x: int, tile: str) -> list:
     return ans
 
 def makeMove(board: list, y: int, x: int, tile: str):
-    for i, j in tilesToFlip(board, y, x, userTile):
+    for i, j in tilesToFlip(board, y, x, tile):
         board[i][j] = tile
     board[y][x] = tile
 
@@ -72,17 +74,24 @@ def getValidMoves(board: list, tile: str) -> list:
     result = []
     for i in range(8):
         for j in range(8):
-            if board[i][j] == EMPTY and len(tilesToFlip(board, i, j, userTile)) > 0:
+            if board[i][j] == EMPTY and len(tilesToFlip(board, i, j, tile)) > 0:
                 result.append([i, j])
     return result
 
 def getComputerMove(board: list):
     i, j = random.choice(getValidMoves(board, computerTile))
+    print(f"Ход компьютера: {'abcdefgh'[j]}{8-i}")
     makeMove(board, i, j, computerTile)
 
 def getScore(board: list):
-    # подсчитать очки
-    pass
+    score = {'user': 0, 'computer': 0}
+    for i in range(8):
+        for j in range(8):
+            if board[i][j] == userTile:
+                score['user'] += 1
+            elif board[i][j] == computerTile:
+                score['computer'] += 1
+    return score
 
 def getUserMove(board: list):
     while True:
@@ -109,8 +118,27 @@ def getUserMove(board: list):
 TILES = ['●', '○']
 EMPTY = '·'
 
+userTile, computerTile = TILES
 board = getNewBoard()
 printBoard(board)
 userTile, computerTile = selectUserTile()
-getUserMove(board)
-printBoard(board)
+
+gameOn = True
+while gameOn:
+    if getValidMoves(board, userTile):
+        getUserMove(board)
+        printBoard(board)
+    if getValidMoves(board, computerTile):
+        getComputerMove(board)
+        printBoard(board)
+    if not (getValidMoves(board, userTile) or getValidMoves(board, computerTile)):
+        gameOn = False
+
+print('Игра окончена')
+score = getScore(board)
+if score['user'] > score['computer']:
+    print('Вы победили')
+elif score['user'] < score['computer']:
+    print('Вы проиграли')
+else:
+    print('Ничья')
